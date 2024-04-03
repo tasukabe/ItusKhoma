@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/tasukabe/Codes/cpp/Experiment/Itu's Khoma/build",
+  "command": "/usr/bin/g++-13   -g -o CMakeFiles/ItusKhoma.dir/Main.cpp.o -c \"/home/tasukabe/Codes/cpp/Experiment/Itu's Khoma/Main.cpp\"",
+  "file": "/home/tasukabe/Codes/cpp/Experiment/Itu's Khoma/Main.cpp"
+},
+{
+  "directory": "/home/tasukabe/Codes/cpp/Experiment/Itu's Khoma/build",
+  "command": "/usr/bin/g++-13   -g -o CMakeFiles/ItusKhoma.dir/Render.cpp.o -c \"/home/tasukabe/Codes/cpp/Experiment/Itu's Khoma/Render.cpp\"",
+  "file": "/home/tasukabe/Codes/cpp/Experiment/Itu's Khoma/Render.cpp"
+}
+]
