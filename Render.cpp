@@ -1,10 +1,13 @@
-#include "Render.hpp"
 #include <fstream>
+#include "Render.hpp"
 
-ItusKhomaRender::ItusKhomaRender(const std::string image_name) : image_name(image_name)
+// "C:/Users/user/Desktop/m.png"
+
+ItusKhomaRender::ItusKhomaRender(const std::string image_name, const std::string screenshot_name, const uint32 res)
+ : image_name(image_name), screenshot_path(screenshot_name), screenshot_name(screenshot_name), RESOLUSION(res)
 {
-    RESOLUSION = 10.f;
-    ColorBias = 0x11111100;
+    // RESOLUSION = 12.f;
+    ColorBias = 0x00000000;
 
     if(!ScanKhoam()) { return; }
     MakeChunkAverage();
@@ -33,26 +36,26 @@ bool ItusKhomaRender::ScanKhoam()
         return false;
     }
 
-    ImageX = ItusKhoma.getSize().x;
-    ImageY = ItusKhoma.getSize().y;
+    ImageX = ItusKhoma.getSize().x ;
+    ImageY = ItusKhoma.getSize().y ;
 
-    PixelBuffer.resize(ImageY/RESOLUSION);
-    PixelBuffer_R.resize(ImageY/RESOLUSION);
-    PixelBuffer_G.resize(ImageY/RESOLUSION);
-    PixelBuffer_B.resize(ImageY/RESOLUSION);
-    PixelBuffer_A.resize(ImageY/RESOLUSION);
+    PixelBuffer.resize(ImageY/RESOLUSION + 1);
+    PixelBuffer_R.resize(ImageY/RESOLUSION + 1);
+    PixelBuffer_G.resize(ImageY/RESOLUSION + 1);
+    PixelBuffer_B.resize(ImageY/RESOLUSION + 1);
+    PixelBuffer_A.resize(ImageY/RESOLUSION + 1);
 
-    AtomOfKhoma.resize(ImageY/RESOLUSION);    
+    AtomOfKhoma.resize(ImageY/RESOLUSION + 1);    
 
     for(int i = 0; i < PixelBuffer.size(); i++)
     {
-        PixelBuffer.at(i).resize(ImageX/RESOLUSION);
-        PixelBuffer_R.at(i).resize(ImageX/RESOLUSION);
-        PixelBuffer_G.at(i).resize(ImageX/RESOLUSION);
-        PixelBuffer_B.at(i).resize(ImageX/RESOLUSION);
-        PixelBuffer_A.at(i).resize(ImageX/RESOLUSION);
+        PixelBuffer.at(i).resize(ImageX/RESOLUSION + 1);
+        PixelBuffer_R.at(i).resize(ImageX/RESOLUSION + 1);
+        PixelBuffer_G.at(i).resize(ImageX/RESOLUSION + 1);
+        PixelBuffer_B.at(i).resize(ImageX/RESOLUSION + 1);
+        PixelBuffer_A.at(i).resize(ImageX/RESOLUSION + 1);
 
-        AtomOfKhoma.at(i).resize(ImageX/RESOLUSION);
+        AtomOfKhoma.at(i).resize(ImageX/RESOLUSION + 1);
     }
 
     std::ofstream dff("dff.txt");
@@ -88,7 +91,7 @@ bool ItusKhomaRender::ScanKhoam()
     return true;
 }
 
-int32_t ItusKhomaRender::MakePixelAverage(int i, int j)
+uint32 ItusKhomaRender::MakePixelAverage(int i, int j)
 {
     int ChunkX = i/RESOLUSION;
     int ChunkY = j/RESOLUSION;
@@ -98,7 +101,7 @@ int32_t ItusKhomaRender::MakePixelAverage(int i, int j)
     PixelBuffer_B.at(ChunkY).at(ChunkX) += ItusKhoma.getPixel(i, j).b;
     PixelBuffer_A.at(ChunkY).at(ChunkX) += ItusKhoma.getPixel(i, j).a;
 
-    float r,g,b,a;
+    uint32 r,g,b,a;
     r = ItusKhoma.getPixel(i, j).r;
     g = ItusKhoma.getPixel(i, j).g;
     b = ItusKhoma.getPixel(i, j).b;
@@ -131,27 +134,27 @@ int ItusKhomaRender::CalculateDensity(int i, int j)
 void ItusKhomaRender::LoadToTextBuffer()
 {
     union Color{
-        int32_t color;
+        uint32 color;
 
         struct {
-            int8_t a;
-            int8_t b;
-            int8_t g;
-            int8_t r;
+            uint8 a;
+            uint8 b;
+            uint8 g;
+            uint8 r;
         } clr;
     };
     Color color;
-
+    
     for (int j = 0; j < ImageY/RESOLUSION; j++)
     {
         for (int i = 0; i < ImageX/RESOLUSION; i++)
         {
             AtomOfKhoma.at(j).at(i) = UniversalAtom;
 
-            color.clr.r = static_cast<int8_t>(PixelBuffer_R[j][i]);
-            color.clr.g = static_cast<int8_t>(PixelBuffer_G[j][i]);
-            color.clr.b = static_cast<int8_t>(PixelBuffer_B[j][i]);
-            color.clr.a = static_cast<int8_t>(PixelBuffer_A[j][i]);
+            color.clr.r = static_cast<uint8>(PixelBuffer_R[j][i]);
+            color.clr.g = static_cast<uint8>(PixelBuffer_G[j][i]);
+            color.clr.b = static_cast<uint8>(PixelBuffer_B[j][i]);
+            color.clr.a = static_cast<uint8>(PixelBuffer_A[j][i]);
             
             AtomOfKhoma.at(j).at(i).setString(sf::String( Density.at(CalculateDensity(i, j)) ));
             if(color.color + ColorBias > 0xffffffff)
@@ -164,8 +167,8 @@ void ItusKhomaRender::LoadToTextBuffer()
         }
     }
 
-}
 
+}
 void ItusKhomaRender::AllgineAtoms()
 {
     for(int j = 0; j < ImageY/RESOLUSION; j++)
@@ -187,7 +190,7 @@ void ItusKhomaRender::RenderKhoma()
 
         KhomaDorshon->display();
 
-        GetUserAcion();
+        GetUserAction();
     }
     
 
@@ -204,7 +207,7 @@ void ItusKhomaRender::MakeDisplayKhoma()
     }
 }
 
-void ItusKhomaRender::GetUserAcion()
+void ItusKhomaRender::GetUserAction()
 {
     if(KhomaDorshon->pollEvent(event))
     {
@@ -213,7 +216,36 @@ void ItusKhomaRender::GetUserAcion()
         case sf::Event::Closed:
                 KhomaDorshon->close();
             break;
+        case sf::Event::KeyPressed:
+            if(event.key.code == sf::Keyboard::S)
+            {
+                TakeScreenShot();
+            }
+            break;
         }
+    }
+}
+
+void ItusKhomaRender::TakeScreenShot()
+{
+
+    if(screenshot_path == "n"){
+        screenshot_path = "C:/Users/user/Pictures/ItusKhoma_ScreenShot_";
+        screenshot_name = screenshot_path + std::to_string(rand()) + ".png";
+    }
+
+    if(!KhomaDorshon->capture().saveToFile(this->screenshot_name))
+    {
+        std::string command = "mkdir " + screenshot_path;
+        std::cout<<command.data() <<std::endl;
+        system(command.data());
+    }
+    if(!KhomaDorshon->capture().saveToFile(this->screenshot_name))
+    {
+        std::cout<<"Unable to localize screenshot file directory!!!\n";
+    }
+    else{
+        std::cout<<"Screenshot saved to: "<<this->screenshot_name<<std::endl;
     }
 }
 
