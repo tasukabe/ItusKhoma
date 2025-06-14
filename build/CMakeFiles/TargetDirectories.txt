@@ -1,3 +1,0 @@
-/home/tasukabe/Codes/cpp/Experiment/Itu's Khoma/build/CMakeFiles/ItusKhoma.dir
-/home/tasukabe/Codes/cpp/Experiment/Itu's Khoma/build/CMakeFiles/edit_cache.dir
-/home/tasukabe/Codes/cpp/Experiment/Itu's Khoma/build/CMakeFiles/rebuild_cache.dir
