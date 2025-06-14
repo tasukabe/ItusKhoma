@@ -10,23 +10,30 @@
 #include <vector>
 
 
+typedef unsigned char       uint8;
+typedef unsigned short      uint16;
+typedef unsigned int        uint32;
+typedef unsigned long long  uint64;
+
+
 class ItusKhomaRender
 {
 public:
 
-    ItusKhomaRender(const std::string image_name);
+    ItusKhomaRender(const std::string image_name, const std::string screenshot_name, const uint32 res);
     ~ItusKhomaRender();
 
     bool ScanKhoam();
     void RenderKhoma();
 
     void MakeDisplayKhoma();
-    void GetUserAcion();
+    void GetUserAction();
+    void TakeScreenShot();
 
     void MakeChunkAverage();
     void LoadToTextBuffer();
     int CalculateDensity(int i, int j);
-    int32_t MakePixelAverage(int i, int j);
+    uint32 MakePixelAverage(int i, int j);
 
     bool InitFontText();
     void AllgineAtoms();
@@ -37,32 +44,34 @@ public:
 
 private:
 
-    int32_t ImageX, ImageY;
-    int32_t RESOLUSION;
+    uint32 ImageX, ImageY;
+    uint32 RESOLUSION;
 
-    int32_t ColorBias;
+    uint32 ColorBias;
 
     const std::string image_name;
+    std::string screenshot_path;
+    std::string       screenshot_name;
 
     const std::string Density = " .,-~*=!%A&@#";
 
     sf::Image ItusKhoma;
 
-    std::vector<std::vector<int32_t>> PixelBuffer;
+    std::vector<std::vector<uint32>> PixelBuffer;
 
 
     sf::Text UniversalAtom;
     std::vector<std::vector<sf::Text>> AtomOfKhoma;
 
-    std::vector<std::vector<int32_t>> PixelBuffer_R;
-    std::vector<std::vector<int32_t>> PixelBuffer_G;
-    std::vector<std::vector<int32_t>> PixelBuffer_B;
-    std::vector<std::vector<int32_t>> PixelBuffer_A;
+    std::vector<std::vector<uint32>> PixelBuffer_R;
+    std::vector<std::vector<uint32>> PixelBuffer_G;
+    std::vector<std::vector<uint32>> PixelBuffer_B;
+    std::vector<std::vector<uint32>> PixelBuffer_A;
 
 
     //* Window....
 
-    float FontDistanceX, FontDistanceY;
+    uint32 FontDistanceX, FontDistanceY;
     sf::Font KhomaR_Font;
 
     sf::RenderWindow* KhomaDorshon;
